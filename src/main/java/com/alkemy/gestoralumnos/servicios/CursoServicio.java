@@ -8,9 +8,9 @@ import java.util.List;
 
 public interface CursoServicio {
 
-    public List<CursoDTO> obtenerTodos();
+    List<CursoDTO> obtenerTodos();
     ResponseEntity<CursoDTO> cargarAlumno(int id, int idEstudiante);
-    public ResponseEntity<List<EstudianteDTO>> obtenerAlumnos(int id);
-    public ResponseEntity<Double> calcularPromedioEdad(int id);
-    public ResponseEntity<List<EstudianteDTO>> obtenerAlumnosNotaMasAlta(int id);
+    ResponseEntity<List<EstudianteDTO>> obtenerAlumnos(int id);
+    ResponseEntity<Double> calcularPromedioEdad(int id);
+    ResponseEntity<List<EstudianteDTO>> obtenerAlumnosNotaMasAlta(int id);
 }
