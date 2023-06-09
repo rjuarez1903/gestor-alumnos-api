@@ -13,4 +13,8 @@ public interface EstudianteServicio {
     ResponseEntity<List<EstudianteDTO>> borrar(int id) throws Exception;
 
     ResponseEntity<EstudianteDTO> actualizar(int id, EstudianteDTO estudiante);
+
+    List<EstudianteDTO> obtenerMorosos();
+
+    List<EstudianteDTO> obtenerDeudoresMaterias();
 }

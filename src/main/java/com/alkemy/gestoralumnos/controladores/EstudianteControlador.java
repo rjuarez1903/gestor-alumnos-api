@@ -20,6 +20,21 @@ public class EstudianteControlador {
         return estudianteServicioImplementacion.obtenerTodos();
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<EstudianteDTO> obtener(@PathVariable int id) {
+        return estudianteServicioImplementacion.obtener(id);
+    }
+
+    @GetMapping("/morosos")
+    public List<EstudianteDTO>  obtenerMorosos() {
+        return estudianteServicioImplementacion.obtenerMorosos();
+    }
+
+    @GetMapping("/deudores-materias")
+    public List<EstudianteDTO>  obtenerDeudoresMaterias() {
+        return estudianteServicioImplementacion.obtenerDeudoresMaterias();
+    }
+
     @PostMapping
     public ResponseEntity<EstudianteDTO> agregar(@RequestBody EstudianteDTO estudiante) {
         return estudianteServicioImplementacion.agregar(estudiante);
