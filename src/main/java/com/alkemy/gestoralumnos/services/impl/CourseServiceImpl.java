@@ -18,18 +18,18 @@ import java.util.stream.Collectors;
 public class CourseServiceImpl implements CourseService {
     private static List<CourseDTO> courses = new ArrayList<>();
     @Autowired
-    private StudentServiceImpl estudianteServicioImplementacion;
+    private StudentServiceImpl studentService;
 
     public CourseServiceImpl() {
-        cargarCursos();
+        addCourses();
     }
 
-    private void cargarCursos() {
+    private void addCourses() {
         courses.add(new CourseDTO(1, "Spring"));
         courses.add(new CourseDTO(2, "React"));
     }
 
-    private CourseDTO obtenerCurso(int id) {
+    private CourseDTO get(int id) {
         return courses.stream().filter(c ->  c.getId() == id).findFirst().orElse(null);
     }
 
@@ -38,7 +38,7 @@ public class CourseServiceImpl implements CourseService {
     }
 
     public ResponseEntity<List<StudentDTO>> getStudents(int id) {
-        CourseDTO course = obtenerCurso(id);
+        CourseDTO course = get(id);
         if (Objects.isNull(course))
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         List<StudentDTO> students = course.getStudents();
@@ -48,8 +48,8 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public ResponseEntity<CourseDTO> addStudent(int id, int studentId) {
-        CourseDTO course = obtenerCurso(id);
-        StudentDTO student = estudianteServicioImplementacion.getAll().stream().filter(e -> e.getId() == studentId).findFirst().orElse(null);
+        CourseDTO course = get(id);
+        StudentDTO student = studentService.getAll().stream().filter(e -> e.getId() == studentId).findFirst().orElse(null);
         if (Objects.isNull(course) || Objects.isNull(student) || course.getStudents().contains(student))
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         course.addStudent(student);
@@ -58,7 +58,7 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public ResponseEntity<Double> calculateAverageAge(int id) {
-        CourseDTO course = obtenerCurso(id);
+        CourseDTO course = get(id);
         if (Objects.isNull(course) || course.getStudents().isEmpty()) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -68,14 +68,14 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public ResponseEntity<List<StudentDTO>> getStudentsWithHighestGrade(int id) {
-        CourseDTO course = obtenerCurso(id);
+        CourseDTO course = get(id);
         if (Objects.isNull(course) || course.getStudents().isEmpty()) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         List<StudentDTO> students = course.getStudents();
         // Acá no me las ingenié para no tener que recorrer dos veces
-        OptionalDouble maxNotaIngreso = students.stream().mapToDouble(StudentDTO::getEntranceGrade).max();
-        List<StudentDTO> estudiantesNotaMaxima = students.stream().filter(e -> e.getEntranceGrade() == maxNotaIngreso.getAsDouble()).collect(Collectors.toList());
-        return new ResponseEntity<>(estudiantesNotaMaxima, HttpStatus.OK);
+        OptionalDouble highestGrade = students.stream().mapToDouble(StudentDTO::getEntranceGrade).max();
+        List<StudentDTO> highestGradeStudents = students.stream().filter(e -> e.getEntranceGrade() == highestGrade.getAsDouble()).collect(Collectors.toList());
+        return new ResponseEntity<>(highestGradeStudents, HttpStatus.OK);
     }
 }
