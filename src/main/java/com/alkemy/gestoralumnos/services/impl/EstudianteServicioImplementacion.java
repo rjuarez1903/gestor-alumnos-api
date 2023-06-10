@@ -1,8 +1,7 @@
-package com.alkemy.gestoralumnos.servicios.impl;
+package com.alkemy.gestoralumnos.services.impl;
 
-import com.alkemy.gestoralumnos.dtos.EstudianteDTO;
-import com.alkemy.gestoralumnos.servicios.EstudianteServicio;
-import lombok.Getter;
+import com.alkemy.gestoralumnos.dto.EstudianteDTO;
+import com.alkemy.gestoralumnos.services.EstudianteServicio;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;

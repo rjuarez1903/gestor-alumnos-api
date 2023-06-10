@@ -1,7 +1,7 @@
-package com.alkemy.gestoralumnos.servicios;
+package com.alkemy.gestoralumnos.services;
 
-import com.alkemy.gestoralumnos.dtos.CursoDTO;
-import com.alkemy.gestoralumnos.dtos.EstudianteDTO;
+import com.alkemy.gestoralumnos.dto.CursoDTO;
+import com.alkemy.gestoralumnos.dto.EstudianteDTO;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;

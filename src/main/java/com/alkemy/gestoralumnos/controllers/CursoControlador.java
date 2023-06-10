@@ -1,8 +1,8 @@
-package com.alkemy.gestoralumnos.controladores;
+package com.alkemy.gestoralumnos.controllers;
 
-import com.alkemy.gestoralumnos.dtos.CursoDTO;
-import com.alkemy.gestoralumnos.dtos.EstudianteDTO;
-import com.alkemy.gestoralumnos.servicios.impl.CursoServicioImplementacion;
+import com.alkemy.gestoralumnos.dto.CursoDTO;
+import com.alkemy.gestoralumnos.dto.EstudianteDTO;
+import com.alkemy.gestoralumnos.services.impl.CursoServicioImplementacion;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

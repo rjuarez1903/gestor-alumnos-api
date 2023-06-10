@@ -1,4 +1,4 @@
-package com.alkemy.gestoralumnos.dtos;
+package com.alkemy.gestoralumnos.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

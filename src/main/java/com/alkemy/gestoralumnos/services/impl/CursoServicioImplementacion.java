@@ -1,8 +1,8 @@
-package com.alkemy.gestoralumnos.servicios.impl;
+package com.alkemy.gestoralumnos.services.impl;
 
-import com.alkemy.gestoralumnos.dtos.CursoDTO;
-import com.alkemy.gestoralumnos.dtos.EstudianteDTO;
-import com.alkemy.gestoralumnos.servicios.CursoServicio;
+import com.alkemy.gestoralumnos.dto.CursoDTO;
+import com.alkemy.gestoralumnos.dto.EstudianteDTO;
+import com.alkemy.gestoralumnos.services.CursoServicio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -15,10 +15,10 @@ El proyecto está desarrollado utilizando las siguientes tecnologías:
 
 El proyecto sigue una estructura de paquetes típica de una aplicación Spring Boot. A continuación se muestra la estructura básica:
 
-- com.alkemy.gestoralumnos.controladores: Contiene los controladores de la API REST utilizados para manejar las solicitudes HTTP.
-- com.alkemy.gestoralumnos.dtos: Contiene las clases DTO (Data Transfer Object) utilizadas para transferir datos entre el frontend y el backend.
-- com.alkemy.gestoralumnos.servicios: Contiene las interfaces de los servicios utilizados en la aplicación.
-- com.alkemy.gestoralumnos.servicios.impl: Contiene las implementaciones de los servicios.
+- com.alkemy.gestoralumnos.controllers: Contiene los controladores de la API REST utilizados para manejar las solicitudes HTTP.
+- com.alkemy.gestoralumnos.dto: Contiene las clases DTO (Data Transfer Object) utilizadas para transferir datos entre el frontend y el backend.
+- com.alkemy.gestoralumnos.services: Contiene las interfaces de los servicios utilizados en la aplicación.
+- com.alkemy.gestoralumnos.services.impl: Contiene las implementaciones de los servicios.
 - com.alkemy.gestoralumnos: Paquete principal que contiene la clase principal Application y la configuración general de la aplicación.
 
 ## Funcionalidades principales
