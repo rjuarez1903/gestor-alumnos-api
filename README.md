@@ -11,6 +11,14 @@ El proyecto está desarrollado utilizando las siguientes tecnologías:
 - Lombok
 - Maven
 
+## Documentación de la API
+
+La API está documentada utilizando Swagger. Puedes acceder a la documentación de la API a través de la siguiente URL:
+
+- [Swagger UI](http://localhost:8080/swagger-ui/index.html)
+
+La documentación de Swagger proporciona detalles sobre los endpoints disponibles, los parámetros requeridos, las respuestas esperadas y más.
+
 ## Estructura del proyecto
 
 El proyecto sigue una estructura de paquetes típica de una aplicación Spring Boot. A continuación se muestra la estructura básica:
