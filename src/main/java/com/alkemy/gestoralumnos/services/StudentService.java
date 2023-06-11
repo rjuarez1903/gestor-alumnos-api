@@ -14,5 +14,4 @@ public interface StudentService {
     StudentDTO update(Long id, StudentSaveDTO student);
     List<StudentDTO> getDefaulters();
     List<StudentDTO> getStudentsWithSubjectDebts();
-    void save(Student student);
 }

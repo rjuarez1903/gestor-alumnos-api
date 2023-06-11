@@ -29,28 +29,9 @@ public class CourseServiceImpl implements CourseService {
     @Autowired
     private StudentServiceImpl studentService;
 
-
-//    private void addCourses() {
-//        courses.add(new CourseDTO(1, "Spring"));
-//        courses.add(new CourseDTO(2, "React"));
-//    }
-
-//    private CourseDTO get(int id) {
-//        return courses.stream().filter(c ->  c.getId() == id).findFirst().orElse(null);
-//    }
-//
     public List<CourseDTO> getAll() {
         return courseRepository.findAll().stream().map(CourseDTO::new).toList();
     }
-
-//    public ResponseEntity<List<StudentDTO>> getStudents(int id) {
-//        CourseDTO course = get(id);
-//        if (Objects.isNull(course))
-//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-//        List<StudentDTO> students = course.getStudents();
-//        students.sort((s1, s2) -> s2.getSurname().compareTo(s1.getSurname()));
-//        return new ResponseEntity<>(students, HttpStatus.OK);
-//    }
 
     public List<StudentDTO> getRegisteredStudents(Long courseId) {
         Course course = courseRepository.findById(courseId).orElse(null);
@@ -108,6 +89,4 @@ public class CourseServiceImpl implements CourseService {
                 .toList();
         return ResponseEntity.ok(highestGradeStudents.stream().map(StudentDTO::new).toList());
     }
-
-
 }

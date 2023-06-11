@@ -16,7 +16,6 @@ import java.util.Optional;
 
 @Service
 public class StudentServiceImpl implements StudentService {
-
     @Autowired
     StudentRepository studentRepository;
     @Autowired
@@ -77,10 +76,5 @@ public class StudentServiceImpl implements StudentService {
     public List<StudentDTO> getStudentsWithSubjectDebts() {
         List<Student> students = studentRepository.findAll();
         return students.stream().filter(Student::isHasSubjectDebts).map(StudentDTO::new).toList();
-    }
-
-    @Override
-    public void save(Student student) {
-        studentRepository.save(student);
     }
 }
