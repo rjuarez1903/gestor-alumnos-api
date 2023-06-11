@@ -43,7 +43,7 @@ public class StudentServiceImpl implements StudentService {
         if (Objects.isNull(student))
             return null;
         List<CourseRegistration> courseRegistrations = student.getRegistrations();
-        courseRegistrations.forEach(courseReg -> courseRegistrationRepository.delete(courseReg));
+        courseRegistrationRepository.deleteAll(courseRegistrations);
         studentRepository.delete(student);
         return studentRepository.findAll().stream().map(StudentDTO::new).toList();
     }
@@ -61,9 +61,9 @@ public class StudentServiceImpl implements StudentService {
             existingStudent.setEntranceGrade(student.getEntranceGrade());
             Student updatedStudent = studentRepository.save(existingStudent);
             return new StudentDTO(updatedStudent);
-        } else {
-            return null;
         }
+        return null;
+
     }
 
     @Override
