@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -26,8 +25,6 @@ public class CourseServiceImpl implements CourseService {
     private StudentRepository studentRepository;
     @Autowired
     CourseRegistrationRepository courseRegistrationRepository;
-    @Autowired
-    private StudentServiceImpl studentService;
 
     public List<CourseDTO> getAll() {
         return courseRepository.findAll().stream().map(CourseDTO::new).toList();
@@ -70,7 +67,6 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public ResponseEntity<Double> calculateAverageAge(Long id) {
-        Course course = courseRepository.findById(id).orElse(null);
         double averageAge = courseRepository.getAverageAgeByCourseId(id);
         return ResponseEntity.ok(averageAge);
     }
