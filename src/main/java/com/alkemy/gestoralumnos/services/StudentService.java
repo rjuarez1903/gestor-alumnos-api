@@ -1,21 +1,18 @@
 package com.alkemy.gestoralumnos.services;
 
+import com.alkemy.gestoralumnos.dto.StudentSaveDTO;
 import com.alkemy.gestoralumnos.dto.StudentDTO;
-import org.springframework.http.ResponseEntity;
+import com.alkemy.gestoralumnos.models.Student;
 
 import java.util.List;
 
 public interface StudentService {
-    ResponseEntity<StudentDTO> get(int id);
-    ResponseEntity<StudentDTO> add(StudentDTO student);
-
+    StudentDTO get(Long id);
+    StudentDTO add(StudentSaveDTO student);
     List<StudentDTO> getAll();
-
-    ResponseEntity<List<StudentDTO>> delete(int id) throws Exception;
-
-    ResponseEntity<StudentDTO> update(int id, StudentDTO estudiante);
-
+    List<StudentDTO> delete(Long id);
+    StudentDTO update(Long id, StudentSaveDTO student);
     List<StudentDTO> getDefaulters();
-
     List<StudentDTO> getStudentsWithSubjectDebts();
+    void save(Student student);
 }

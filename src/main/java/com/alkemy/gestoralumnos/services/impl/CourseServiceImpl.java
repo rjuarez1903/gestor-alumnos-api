@@ -2,80 +2,112 @@ package com.alkemy.gestoralumnos.services.impl;
 
 import com.alkemy.gestoralumnos.dto.CourseDTO;
 import com.alkemy.gestoralumnos.dto.StudentDTO;
+import com.alkemy.gestoralumnos.models.Course;
+import com.alkemy.gestoralumnos.models.CourseRegistration;
+import com.alkemy.gestoralumnos.models.Student;
+import com.alkemy.gestoralumnos.repository.CourseRegistrationRepository;
+import com.alkemy.gestoralumnos.repository.CourseRepository;
+import com.alkemy.gestoralumnos.repository.StudentRepository;
 import com.alkemy.gestoralumnos.services.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.OptionalDouble;
-import java.util.stream.Collectors;
+
 
 @Service
 public class CourseServiceImpl implements CourseService {
-    private static List<CourseDTO> courses = new ArrayList<>();
+    @Autowired
+    CourseRepository courseRepository;
+    @Autowired
+    private StudentRepository studentRepository;
+    @Autowired
+    CourseRegistrationRepository courseRegistrationRepository;
     @Autowired
     private StudentServiceImpl studentService;
 
-    public CourseServiceImpl() {
-        addCourses();
-    }
 
-    private void addCourses() {
-        courses.add(new CourseDTO(1, "Spring"));
-        courses.add(new CourseDTO(2, "React"));
-    }
+//    private void addCourses() {
+//        courses.add(new CourseDTO(1, "Spring"));
+//        courses.add(new CourseDTO(2, "React"));
+//    }
 
-    private CourseDTO get(int id) {
-        return courses.stream().filter(c ->  c.getId() == id).findFirst().orElse(null);
-    }
-
+//    private CourseDTO get(int id) {
+//        return courses.stream().filter(c ->  c.getId() == id).findFirst().orElse(null);
+//    }
+//
     public List<CourseDTO> getAll() {
-        return courses;
+        return courseRepository.findAll().stream().map(CourseDTO::new).toList();
     }
 
-    public ResponseEntity<List<StudentDTO>> getStudents(int id) {
-        CourseDTO course = get(id);
-        if (Objects.isNull(course))
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        List<StudentDTO> students = course.getStudents();
-        students.sort((s1, s2) -> s2.getSurname().compareTo(s1.getSurname()));
-        return new ResponseEntity<>(students, HttpStatus.OK);
-    }
+//    public ResponseEntity<List<StudentDTO>> getStudents(int id) {
+//        CourseDTO course = get(id);
+//        if (Objects.isNull(course))
+//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//        List<StudentDTO> students = course.getStudents();
+//        students.sort((s1, s2) -> s2.getSurname().compareTo(s1.getSurname()));
+//        return new ResponseEntity<>(students, HttpStatus.OK);
+//    }
 
-    @Override
-    public ResponseEntity<CourseDTO> addStudent(int id, int studentId) {
-        CourseDTO course = get(id);
-        StudentDTO student = studentService.getAll().stream().filter(e -> e.getId() == studentId).findFirst().orElse(null);
-        if (Objects.isNull(course) || Objects.isNull(student) || course.getStudents().contains(student))
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        course.addStudent(student);
-        return new ResponseEntity<>(course, HttpStatus.OK);
-    }
-
-    @Override
-    public ResponseEntity<Double> calculateAverageAge(int id) {
-        CourseDTO course = get(id);
-        if (Objects.isNull(course) || course.getStudents().isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    public List<StudentDTO> getRegisteredStudents(Long courseId) {
+        Course course = courseRepository.findById(courseId).orElse(null);
+        if (!Objects.isNull(course)) {
+            List<CourseRegistration> registrations = course.getRegistrations();
+            if (!registrations.isEmpty()) {
+                List<Student> registeredStudents = registrations.stream().map(CourseRegistration::getStudent).toList();
+                return registeredStudents.stream().map(StudentDTO::new).toList();
+            }
         }
-        double averageAge = course.getStudents().stream().mapToInt(StudentDTO::getAge).average().orElse(0);
-        return new ResponseEntity<>(averageAge, HttpStatus.OK);
+        return null;
     }
 
     @Override
-    public ResponseEntity<List<StudentDTO>> getStudentsWithHighestGrade(int id) {
-        CourseDTO course = get(id);
-        if (Objects.isNull(course) || course.getStudents().isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    public ResponseEntity<CourseDTO> addStudent(Long courseId, Long studentId) {
+        Course course = courseRepository.findById(courseId).orElse(null);
+        Student student = studentRepository.findById(studentId).orElse(null);
+        if (Objects.isNull(course) || Objects.isNull(student))
+            return ResponseEntity.notFound().build();
+
+        boolean isStudentEnrolled = course.getRegistrations().stream()
+                .anyMatch(registration -> registration.getStudent().getId().equals(studentId));
+
+        if (isStudentEnrolled) {
+            return ResponseEntity.badRequest().build();
         }
-        List<StudentDTO> students = course.getStudents();
-        // Acá no me las ingenié para no tener que recorrer dos veces
-        OptionalDouble highestGrade = students.stream().mapToDouble(StudentDTO::getEntranceGrade).max();
-        List<StudentDTO> highestGradeStudents = students.stream().filter(e -> e.getEntranceGrade() == highestGrade.getAsDouble()).collect(Collectors.toList());
-        return new ResponseEntity<>(highestGradeStudents, HttpStatus.OK);
+
+        CourseRegistration courseRegistration = new CourseRegistration();
+        course.setRegistration(courseRegistration);
+        student.setRegistration(courseRegistration);
+        courseRegistrationRepository.save(courseRegistration);
+        courseRepository.save(course);
+        studentRepository.save(student);
+        return ResponseEntity.ok(new CourseDTO(course));
     }
+
+    @Override
+    public ResponseEntity<Double> calculateAverageAge(Long id) {
+        Course course = courseRepository.findById(id).orElse(null);
+        double averageAge = courseRepository.getAverageAgeByCourseId(id);
+        return ResponseEntity.ok(averageAge);
+    }
+
+    @Override
+    public ResponseEntity<List<StudentDTO>> getStudentsWithHighestGrade(Long id) {
+        Course course = courseRepository.findById(id).orElse(null);
+        if (Objects.isNull(course) || course.getRegistrations().isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+        double maxGrade = courseRepository.findHighestEntranceGradeByCourseId(id);
+        List<Student> highestGradeStudents = course.getRegistrations()
+                .stream()
+                .map(CourseRegistration::getStudent)
+                .filter(student -> student.getEntranceGrade() == maxGrade)
+                .toList();
+        return ResponseEntity.ok(highestGradeStudents.stream().map(StudentDTO::new).toList());
+    }
+
+
 }

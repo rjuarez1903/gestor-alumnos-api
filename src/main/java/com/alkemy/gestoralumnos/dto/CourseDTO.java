@@ -1,5 +1,7 @@
 package com.alkemy.gestoralumnos.dto;
 
+import com.alkemy.gestoralumnos.models.Course;
+import com.alkemy.gestoralumnos.models.CourseRegistration;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -7,19 +9,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-@Setter
 public class CourseDTO {
-    private int id;
+    private Long id;
     private String name;
-    private List<StudentDTO> students;
 
-    public CourseDTO(int id, String name) {
-        this.id = id;
-        this.name = name;
-        this.students = new ArrayList<>();
-    }
-
-    public void addStudent(StudentDTO student) {
-        students.add(student);
+    public CourseDTO(Course course) {
+        this.id = course.getId();
+        this.name = course.getName();
     }
 }

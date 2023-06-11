@@ -22,23 +22,22 @@ public class CourseController {
     }
 
     @GetMapping("/{id}/students/highest-grade")
-    public ResponseEntity<List<StudentDTO>> getStudentsWithHighestGrade(@PathVariable int id) {
+    public ResponseEntity<List<StudentDTO>> getStudentsWithHighestGrade(@PathVariable Long id) {
         return courseService.getStudentsWithHighestGrade(id);
     }
-
-    @GetMapping("/{id}/students")
-    public ResponseEntity<List<StudentDTO>> getStudents(@PathVariable int id) {
-        return courseService.getStudents(id);
-    }
-
     @GetMapping("/{id}/average-age")
-    public ResponseEntity<Double> getAverageAge(@PathVariable int id) {
+    public ResponseEntity<Double> getAverageAge(@PathVariable Long id) {
         return courseService.calculateAverageAge(id);
     }
-
-    @PostMapping("/{id}/students")
-    public ResponseEntity<CourseDTO> addStudent(@PathVariable int id, @RequestParam int studentId) {
-        return courseService.addStudent(id, studentId);
+//
+    @PostMapping("/{courseId}/students")
+    public ResponseEntity<CourseDTO> addStudent(@PathVariable Long courseId, @RequestParam Long studentId) {
+        return courseService.addStudent(courseId, studentId);
     }
 
+    @GetMapping("/{courseId}/students")
+    public List<StudentDTO> getRegisteredStudents(@PathVariable Long courseId) {
+        return courseService.getRegisteredStudents(courseId);
+    }
 }
+

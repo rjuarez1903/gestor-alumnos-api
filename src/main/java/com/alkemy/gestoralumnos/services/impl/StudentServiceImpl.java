@@ -1,78 +1,86 @@
 package com.alkemy.gestoralumnos.services.impl;
 
+import com.alkemy.gestoralumnos.dto.StudentSaveDTO;
 import com.alkemy.gestoralumnos.dto.StudentDTO;
+import com.alkemy.gestoralumnos.models.CourseRegistration;
+import com.alkemy.gestoralumnos.models.Student;
+import com.alkemy.gestoralumnos.repository.CourseRegistrationRepository;
+import com.alkemy.gestoralumnos.repository.StudentRepository;
 import com.alkemy.gestoralumnos.services.StudentService;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 @Service
 public class StudentServiceImpl implements StudentService {
-    private static List<StudentDTO> students = new ArrayList<>();
 
-    public StudentServiceImpl() {
-        addStudents();
-    }
+    @Autowired
+    StudentRepository studentRepository;
+    @Autowired
+    CourseRegistrationRepository courseRegistrationRepository;
 
-    private void addStudents() {
-        students.add(new StudentDTO(1, "Juan", "Pérez", (byte) 20, false, true, 8.5));
-        students.add(new StudentDTO(2, "María", "Gómez", (byte) 22, false, false, 7.8));
-        students.add(new StudentDTO(3, "Pedro", "López", (byte) 19, true, true, 6.2));
-        students.add(new StudentDTO(4, "Laura", "Martínez", (byte) 21, true, false, 9.0));
-        students.add(new StudentDTO(5, "Carlos", "García", (byte) 18, false, false, 7.2));
-        students.add(new StudentDTO(6, "Ana", "Rodríguez", (byte) 20, false, false, 8.8));
-        students.add(new StudentDTO(7, "Diego", "Fernández", (byte) 23, false, true, 6.5));
-        students.add(new StudentDTO(8, "Sofía", "Hernández", (byte) 19, true, true, 8.0));
-        students.add(new StudentDTO(9, "Miguel", "Silva", (byte) 21, false, true, 7.6));
-        students.add(new StudentDTO(10, "Julia", "López", (byte) 22, false, false, 9.2));
-    }
-
-    public ResponseEntity<StudentDTO> add(StudentDTO student) {
-        students.add(student);
-        return new ResponseEntity<>(student, HttpStatus.CREATED);
-    }
-
-    public List<StudentDTO> getAll(){
-        return students;
-    }
-
-    public ResponseEntity<StudentDTO> get(int id) {
-        StudentDTO student = students.stream().filter(e -> e.getId() == id).findFirst().orElse(null);
-        if(Objects.isNull(student))
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        return new ResponseEntity<>(student, HttpStatus.OK);
-    }
-
-    public ResponseEntity<List<StudentDTO>> delete(int id) {
-        if(students.removeIf(student -> student.getId() == id))
-            return new ResponseEntity<>(students, HttpStatus.OK);
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    @Override
+    public StudentDTO get(Long id) {
+        return studentRepository.findById(id).map(StudentDTO::new).orElse(null);
     }
 
     @Override
-    public ResponseEntity<StudentDTO> update(int id, StudentDTO student) {
-        StudentDTO oldStudent = students.stream().filter(empleado -> empleado.getId() == id).findFirst().orElse(null);
-        if(Objects.isNull(oldStudent)) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    public StudentDTO add(StudentSaveDTO student) {
+        Student st = new Student(student.getName(), student.getSurname(), student.getAge(), student.isHasSubjectDebts(), student.isHasEnrollmentDebt(), student.getEntranceGrade());
+        studentRepository.save(st);
+        return new StudentDTO(st);
+    }
+
+    public List<StudentDTO> getAll(){
+        return studentRepository.findAll().stream().map(StudentDTO::new).toList();
+    }
+
+
+    public List<StudentDTO> delete(Long id) {
+        Student student = studentRepository.findById(id).orElse(null);
+        if (Objects.isNull(student))
+            return null;
+        List<CourseRegistration> courseRegistrations = student.getRegistrations();
+        courseRegistrations.forEach(courseReg -> courseRegistrationRepository.delete(courseReg));
+        studentRepository.delete(student);
+        return studentRepository.findAll().stream().map(StudentDTO::new).toList();
+    }
+
+    @Override
+    public StudentDTO update(Long id, StudentSaveDTO student) {
+        Optional<Student> optionalStudent = studentRepository.findById(id);
+        if (optionalStudent.isPresent()) {
+            Student existingStudent = optionalStudent.get();
+            existingStudent.setName(student.getName());
+            existingStudent.setSurname(student.getSurname());
+            existingStudent.setAge(student.getAge());
+            existingStudent.setHasSubjectDebts(student.isHasSubjectDebts());
+            existingStudent.setHasEnrollmentDebt(student.isHasEnrollmentDebt());
+            existingStudent.setEntranceGrade(student.getEntranceGrade());
+            Student updatedStudent = studentRepository.save(existingStudent);
+            return new StudentDTO(updatedStudent);
+        } else {
+            return null;
         }
-        students.remove(oldStudent);
-        student.setId(id);
-        students.add(student);
-        return new ResponseEntity<>(student, HttpStatus.OK);
     }
 
     @Override
     public List<StudentDTO> getDefaulters() {
-        return students.stream().filter(StudentDTO::isHasEnrollmentDebt).collect(Collectors.toList());
+        List<Student> students = studentRepository.findAll();
+        return students.stream().filter(Student::isHasEnrollmentDebt).map(StudentDTO::new).toList();
     }
 
     @Override
     public List<StudentDTO> getStudentsWithSubjectDebts() {
-        return students.stream().filter(StudentDTO::isHasSubjectDebts).collect(Collectors.toList());
+        List<Student> students = studentRepository.findAll();
+        return students.stream().filter(Student::isHasSubjectDebts).map(StudentDTO::new).toList();
+    }
+
+    @Override
+    public void save(Student student) {
+        studentRepository.save(student);
     }
 }
