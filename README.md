@@ -7,7 +7,7 @@ Este proyecto es un gestor de alumnos que permite administrar cursos y estudiant
 El proyecto está desarrollado utilizando las siguientes tecnologías:
 
 - Java
-- Spring Framework (Spring Boot, Spring MVC, Spring Data JPA)
+- Spring Framework (Spring Boot, Spring MVC, Spring Data JPA, Validation)
 - Lombok
 - Maven
 
