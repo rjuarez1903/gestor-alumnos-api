@@ -14,8 +14,6 @@ import com.alkemy.gestoralumnos.repository.CourseRepository;
 import com.alkemy.gestoralumnos.repository.StudentRepository;
 import com.alkemy.gestoralumnos.services.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -46,7 +44,7 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public ResponseEntity<CourseDTO> addStudent(Long courseId, Long studentId) throws CourseNotFoundException, StudentNotFoundException, StudentAlreadyEnrolledException {
+    public CourseDTO addStudent(Long courseId, Long studentId) throws CourseNotFoundException, StudentNotFoundException, StudentAlreadyEnrolledException {
         Course course = getCourse(courseId);
         Student student = getStudent(studentId);
         boolean isStudentEnrolled = course.getRegistrations().stream()
@@ -60,16 +58,15 @@ public class CourseServiceImpl implements CourseService {
         courseRegistrationRepository.save(courseRegistration);
         courseRepository.save(course);
         studentRepository.save(student);
-        return ResponseEntity.ok(new CourseDTO(course));
+        return new CourseDTO(course);
     }
 
     @Override
-    public ResponseEntity<Double> calculateAverageAge(Long id) throws CourseNotFoundException, NoEnrollmentsException {
+    public double calculateAverageAge(Long id) throws CourseNotFoundException, NoEnrollmentsException {
         Optional<Course> course = courseRepository.findById(id);
         if (course.isPresent()) {
             if (!course.get().getRegistrations().isEmpty()) {
-                double averageAge = courseRepository.getAverageAgeByCourseId(id);
-                return new ResponseEntity<>(averageAge, HttpStatus.OK);
+                return  courseRepository.getAverageAgeByCourseId(id);
             }
             throw new NoEnrollmentsException("The course with id " + id + " has no enrollments.");
         }

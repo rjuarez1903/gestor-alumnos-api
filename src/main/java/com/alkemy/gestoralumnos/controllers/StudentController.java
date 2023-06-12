@@ -31,12 +31,12 @@ public class StudentController {
 
     @GetMapping("/defaulters")
     public ResponseEntity<List<StudentDTO>> getDefaulters() {
-        return studentService.getDefaulters();
+        return ResponseEntity.ok(studentService.getDefaulters());
     }
 
     @GetMapping("/subject-debts")
     public ResponseEntity<List<StudentDTO>> getStudentsWithSubjectDebts() {
-        return studentService.getStudentsWithSubjectDebts();
+        return ResponseEntity.ok(studentService.getStudentsWithSubjectDebts());
     }
 
     @PostMapping
@@ -51,7 +51,7 @@ public class StudentController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) throws StudentNotFoundException {
-        return studentService.delete(id);
+        return ResponseEntity.ok(studentService.delete(id));
     }
 
 }

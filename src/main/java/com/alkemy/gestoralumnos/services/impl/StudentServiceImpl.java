@@ -9,8 +9,6 @@ import com.alkemy.gestoralumnos.repository.CourseRegistrationRepository;
 import com.alkemy.gestoralumnos.repository.StudentRepository;
 import com.alkemy.gestoralumnos.services.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -39,12 +37,12 @@ public class StudentServiceImpl implements StudentService {
         return studentRepository.findAll().stream().map(StudentDTO::new).toList();
     }
 
-    public ResponseEntity<List<StudentDTO>> delete(Long id) throws StudentNotFoundException {
+    public List<StudentDTO> delete(Long id) throws StudentNotFoundException {
         Student student = getStudent(id);
         List<CourseRegistration> courseRegistrations = student.getRegistrations();
         courseRegistrationRepository.deleteAll(courseRegistrations);
         studentRepository.delete(student);
-        return new ResponseEntity<>(studentRepository.findAll().stream().map(StudentDTO::new).toList(), HttpStatus.OK) ;
+        return studentRepository.findAll().stream().map(StudentDTO::new).toList();
     }
 
     @Override
@@ -61,15 +59,15 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public ResponseEntity<List<StudentDTO>> getDefaulters() {
+    public List<StudentDTO> getDefaulters() {
         List<Student> students = studentRepository.findAll();
-        return new ResponseEntity<>(students.stream().filter(Student::isHasEnrollmentDebt).map(StudentDTO::new).toList(), HttpStatus.OK) ;
+        return students.stream().filter(Student::isHasEnrollmentDebt).map(StudentDTO::new).toList();
     }
 
     @Override
-    public ResponseEntity<List<StudentDTO>> getStudentsWithSubjectDebts() {
+    public List<StudentDTO> getStudentsWithSubjectDebts() {
         List<Student> students = studentRepository.findAll();
-        return new ResponseEntity<>(students.stream().filter(Student::isHasSubjectDebts).map(StudentDTO::new).toList(), HttpStatus.OK) ;
+        return students.stream().filter(Student::isHasSubjectDebts).map(StudentDTO::new).toList();
     }
 
     private Student getStudent(Long id) throws StudentNotFoundException {

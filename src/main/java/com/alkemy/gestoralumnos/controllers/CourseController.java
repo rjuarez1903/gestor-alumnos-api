@@ -32,12 +32,12 @@ public class CourseController {
     }
     @GetMapping("/{id}/average-age")
     public ResponseEntity<?> getAverageAge(@PathVariable Long id) throws NoEnrollmentsException, CourseNotFoundException {
-        return courseService.calculateAverageAge(id);
+        return ResponseEntity.ok(courseService.calculateAverageAge(id));
     }
 //
     @PostMapping("/{courseId}/students")
     public ResponseEntity<?> addStudent(@PathVariable Long courseId, @RequestParam Long studentId) throws StudentAlreadyEnrolledException, CourseNotFoundException, StudentNotFoundException {
-        return courseService.addStudent(courseId, studentId);
+        return ResponseEntity.ok(courseService.addStudent(courseId, studentId));
     }
 
     @GetMapping("/{courseId}/students")
