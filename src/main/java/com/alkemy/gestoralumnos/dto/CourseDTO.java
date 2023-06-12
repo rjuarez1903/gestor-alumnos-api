@@ -1,20 +1,15 @@
 package com.alkemy.gestoralumnos.dto;
 
 import com.alkemy.gestoralumnos.models.Course;
-import com.alkemy.gestoralumnos.models.CourseRegistration;
 import lombok.Getter;
-import lombok.Setter;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 public class CourseDTO {
-    private Long id;
-    private String name;
+    private final Long ID;
+    private final String NAME;
 
     public CourseDTO(Course course) {
-        this.id = course.getId();
-        this.name = course.getName();
+        this.ID = course.getId();
+        this.NAME = course.getName();
     }
 }

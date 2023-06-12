@@ -2,6 +2,7 @@ package com.alkemy.gestoralumnos.controllers;
 
 import com.alkemy.gestoralumnos.dto.StudentSaveDTO;
 import com.alkemy.gestoralumnos.dto.StudentDTO;
+import com.alkemy.gestoralumnos.exceptions.StudentNotFoundException;
 import com.alkemy.gestoralumnos.services.impl.StudentServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -9,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Objects;
 
 @RestController
 @RequestMapping("/api/students")
@@ -24,11 +24,14 @@ public class StudentController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<StudentDTO> get(@PathVariable Long id) {
-        StudentDTO student = studentService.get(id);
-        if (Objects.isNull(student))
-            return ResponseEntity.notFound().build();
-        return ResponseEntity.ok(student);
+    public ResponseEntity<?> get(@PathVariable Long id) {
+        try {
+            return ResponseEntity.ok(studentService.get(id));
+        } catch (StudentNotFoundException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+
     }
 
     @GetMapping("/defaulters")
@@ -47,19 +50,25 @@ public class StudentController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<StudentDTO> update(@PathVariable Long id, @RequestBody StudentSaveDTO student) {
-        StudentDTO updatedStudent = studentService.update(id, student);
-        if (Objects.isNull(updatedStudent))
-            return ResponseEntity.notFound().build();
-        return ResponseEntity.ok(updatedStudent);
+    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody StudentSaveDTO student) {
+        try {
+            StudentDTO updatedStudent = studentService.update(id, student);
+            return ResponseEntity.ok(updatedStudent);
+        } catch (StudentNotFoundException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<List<StudentDTO>> delete(@PathVariable Long id) {
-        List<StudentDTO> students = studentService.delete(id);
-        if (Objects.isNull(students))
-            return ResponseEntity.notFound().build();
-        return ResponseEntity.ok(students);
+    public ResponseEntity<?> delete(@PathVariable Long id) {
+        try {
+            List<StudentDTO> students = studentService.delete(id);
+            return ResponseEntity.ok(students);
+        } catch (StudentNotFoundException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
     }
 
 }

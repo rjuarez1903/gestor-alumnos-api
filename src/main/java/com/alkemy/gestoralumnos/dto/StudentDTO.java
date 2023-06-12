@@ -1,20 +1,19 @@
 package com.alkemy.gestoralumnos.dto;
 
 import com.alkemy.gestoralumnos.models.Student;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
 public class StudentDTO {
-    private Long id;
-    private String name;
+    private final Long id;
+    private final String name;
     private String surname;
-    private int age;
-    private boolean hasSubjectDebts;
-    private boolean hasEnrollmentDebt;
-    private double entranceGrade;
+    private final int age;
+    private final boolean hasSubjectDebts;
+    private final boolean hasEnrollmentDebt;
+    private final double entranceGrade;
 
     public StudentDTO(Student student) {
         this.id = student.getId();
