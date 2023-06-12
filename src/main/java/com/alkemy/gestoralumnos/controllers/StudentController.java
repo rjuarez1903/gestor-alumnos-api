@@ -4,6 +4,7 @@ import com.alkemy.gestoralumnos.dto.StudentSaveDTO;
 import com.alkemy.gestoralumnos.dto.StudentDTO;
 import com.alkemy.gestoralumnos.exceptions.StudentNotFoundException;
 import com.alkemy.gestoralumnos.services.impl.StudentServiceImpl;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -45,7 +46,7 @@ public class StudentController {
     }
 
     @PostMapping
-    public ResponseEntity<StudentDTO> addStudent(@RequestBody StudentSaveDTO student) {
+    public ResponseEntity<StudentDTO> addStudent(@RequestBody @Valid StudentSaveDTO student) {
         return new ResponseEntity<>(studentService.add(student), HttpStatus.CREATED);
     }
 
