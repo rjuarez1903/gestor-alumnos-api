@@ -3,13 +3,16 @@ package com.alkemy.gestoralumnos.controllers;
 import com.alkemy.gestoralumnos.dto.StudentSaveDTO;
 import com.alkemy.gestoralumnos.dto.StudentDTO;
 import com.alkemy.gestoralumnos.exceptions.studentExceptions.StudentNotFoundException;
+import com.alkemy.gestoralumnos.models.Student;
 import com.alkemy.gestoralumnos.services.impl.StudentServiceImpl;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -40,8 +43,10 @@ public class StudentController {
     }
 
     @PostMapping
-    public ResponseEntity<StudentDTO> addStudent(@RequestBody @Valid StudentSaveDTO student) {
-        return new ResponseEntity<>(studentService.add(student), HttpStatus.CREATED);
+    public ResponseEntity<?> addStudent(@RequestBody @Valid StudentSaveDTO student, UriComponentsBuilder uriComponentsBuilder) {
+        StudentDTO st = studentService.add(student);
+        URI uri = uriComponentsBuilder.path("/api/students/{id}").buildAndExpand(st.getId()).toUri();
+        return ResponseEntity.created(uri).body(st);
     }
 
     @PutMapping("/{id}")
