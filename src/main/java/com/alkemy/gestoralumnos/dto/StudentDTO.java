@@ -7,13 +7,13 @@ import lombok.Setter;
 @Getter
 @Setter
 public class StudentDTO {
-    private final Long id;
-    private final String name;
+    private  Long id;
+    private  String name;
     private String surname;
-    private final int age;
-    private final boolean hasSubjectDebts;
-    private final boolean hasEnrollmentDebt;
-    private final double entranceGrade;
+    private  int age;
+    private  boolean hasSubjectDebts;
+    private  boolean hasEnrollmentDebt;
+    private  double entranceGrade;
 
     public StudentDTO(Student student) {
         this.id = student.getId();

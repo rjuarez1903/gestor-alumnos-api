@@ -28,7 +28,7 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public StudentDTO add(StudentSaveDTO student) {
-        Student st = new Student(student.getNAME(), student.getSURNAME(), student.getAGE(), student.isHAS_SUBJECT_DEBTS(), student.isHAS_ENROLLMENT_DEBT(), student.getENTRANCE_GRADE());
+        Student st = new Student(student.getName(), student.getSurname(), student.getAge(), student.isHasSubjectDebts(), student.isHasEnrollmentDebt(), student.getEntranceGrade());
         studentRepository.save(st);
         return new StudentDTO(st);
     }
@@ -48,12 +48,12 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public StudentDTO update(Long id, StudentSaveDTO student) throws StudentNotFoundException {
         Student existingStudent = getStudent(id);
-        existingStudent.setName(student.getNAME());
-        existingStudent.setSurname(student.getSURNAME());
-        existingStudent.setAge(student.getAGE());
-        existingStudent.setHasSubjectDebts(student.isHAS_SUBJECT_DEBTS());
-        existingStudent.setHasEnrollmentDebt(student.isHAS_ENROLLMENT_DEBT());
-        existingStudent.setEntranceGrade(student.getENTRANCE_GRADE());
+        existingStudent.setName(student.getName());
+        existingStudent.setSurname(student.getSurname());
+        existingStudent.setAge(student.getAge());
+        existingStudent.setHasSubjectDebts(student.isHasSubjectDebts());
+        existingStudent.setHasEnrollmentDebt(student.isHasEnrollmentDebt());
+        existingStudent.setEntranceGrade(student.getEntranceGrade());
         Student updatedStudent = studentRepository.save(existingStudent);
         return new StudentDTO(updatedStudent);
 

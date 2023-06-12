@@ -5,11 +5,11 @@ import lombok.Getter;
 
 @Getter
 public class CourseDTO {
-    private final Long ID;
-    private final String NAME;
+    private Long id;
+    private String name;
 
     public CourseDTO(Course course) {
-        this.ID = course.getId();
-        this.NAME = course.getName();
+        this.id = course.getId();
+        this.name = course.getName();
     }
 }
