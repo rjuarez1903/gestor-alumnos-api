@@ -1,4 +1,4 @@
-package com.alkemy.gestoralumnos.exceptions;
+package com.alkemy.gestoralumnos.exceptions.studentExceptions;
 
 public class StudentNotFoundException extends Exception{
     public StudentNotFoundException(String message) {

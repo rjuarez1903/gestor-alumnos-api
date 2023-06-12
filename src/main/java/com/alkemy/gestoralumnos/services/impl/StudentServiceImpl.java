@@ -2,13 +2,15 @@ package com.alkemy.gestoralumnos.services.impl;
 
 import com.alkemy.gestoralumnos.dto.StudentSaveDTO;
 import com.alkemy.gestoralumnos.dto.StudentDTO;
-import com.alkemy.gestoralumnos.exceptions.StudentNotFoundException;
+import com.alkemy.gestoralumnos.exceptions.studentExceptions.StudentNotFoundException;
 import com.alkemy.gestoralumnos.models.CourseRegistration;
 import com.alkemy.gestoralumnos.models.Student;
 import com.alkemy.gestoralumnos.repository.CourseRegistrationRepository;
 import com.alkemy.gestoralumnos.repository.StudentRepository;
 import com.alkemy.gestoralumnos.services.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -37,12 +39,12 @@ public class StudentServiceImpl implements StudentService {
         return studentRepository.findAll().stream().map(StudentDTO::new).toList();
     }
 
-    public List<StudentDTO> delete(Long id) throws StudentNotFoundException {
+    public ResponseEntity<List<StudentDTO>> delete(Long id) throws StudentNotFoundException {
         Student student = getStudent(id);
         List<CourseRegistration> courseRegistrations = student.getRegistrations();
         courseRegistrationRepository.deleteAll(courseRegistrations);
         studentRepository.delete(student);
-        return studentRepository.findAll().stream().map(StudentDTO::new).toList();
+        return new ResponseEntity<>(studentRepository.findAll().stream().map(StudentDTO::new).toList(), HttpStatus.OK) ;
     }
 
     @Override
@@ -56,19 +58,18 @@ public class StudentServiceImpl implements StudentService {
         existingStudent.setEntranceGrade(student.getEntranceGrade());
         Student updatedStudent = studentRepository.save(existingStudent);
         return new StudentDTO(updatedStudent);
-
     }
 
     @Override
-    public List<StudentDTO> getDefaulters() {
+    public ResponseEntity<List<StudentDTO>> getDefaulters() {
         List<Student> students = studentRepository.findAll();
-        return students.stream().filter(Student::isHasEnrollmentDebt).map(StudentDTO::new).toList();
+        return new ResponseEntity<>(students.stream().filter(Student::isHasEnrollmentDebt).map(StudentDTO::new).toList(), HttpStatus.OK) ;
     }
 
     @Override
-    public List<StudentDTO> getStudentsWithSubjectDebts() {
+    public ResponseEntity<List<StudentDTO>> getStudentsWithSubjectDebts() {
         List<Student> students = studentRepository.findAll();
-        return students.stream().filter(Student::isHasSubjectDebts).map(StudentDTO::new).toList();
+        return new ResponseEntity<>(students.stream().filter(Student::isHasSubjectDebts).map(StudentDTO::new).toList(), HttpStatus.OK) ;
     }
 
     private Student getStudent(Long id) throws StudentNotFoundException {
