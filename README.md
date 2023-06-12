@@ -23,6 +23,7 @@ La documentación de Swagger proporciona detalles sobre los endpoints disponible
 
 El proyecto sigue una estructura de paquetes típica de una aplicación Spring Boot. A continuación se muestra la estructura básica:
 
+- `com.alkemy.gestoralumnos.exceptions` : Contiene las clases de excepciones personalizadas utilizadas en la aplicación. Estas excepciones se lanzan en casos específicos de error y proporcionan información detallada sobre el tipo de error ocurrido.
 - `com.alkemy.gestoralumnos.controllers`: Contiene los controladores de la API REST utilizados para manejar las solicitudes HTTP.
 - `com.alkemy.gestoralumnos.dto`: Contiene las clases DTO (Data Transfer Object) utilizadas para transferir datos entre el frontend y el backend.
 - `com.alkemy.gestoralumnos.services`: Contiene las interfaces de los servicios utilizados en la aplicación.
