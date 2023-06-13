@@ -43,10 +43,11 @@ public class StudentController {
     }
 
     @PostMapping
-    public ResponseEntity<?> addStudent(@RequestBody @Valid StudentSaveDTO student, UriComponentsBuilder uriComponentsBuilder) {
+    public ResponseEntity<?> addStudent(@RequestBody @Valid StudentSaveDTO student) {
         StudentDTO st = studentService.add(student);
-        URI uri = uriComponentsBuilder.path("/api/students/{id}").buildAndExpand(st.getId()).toUri();
-        return ResponseEntity.created(uri).body(st);
+        return ResponseEntity
+                .created(URI.create("/api/students/" + st.getId()))
+                .body(st);
     }
 
     @PutMapping("/{id}")
