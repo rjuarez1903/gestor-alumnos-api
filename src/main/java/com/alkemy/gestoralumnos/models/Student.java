@@ -1,23 +1,38 @@
 package com.alkemy.gestoralumnos.models;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.NotNull;
+import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Table(name="students")
 @Entity(name="Student")
+@AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Getter
-public class Student {
+@Setter
+public class Student implements UserDetails {
     @Id
     @Column(name = "student_id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private String surname;
+    @NotNull
+    private String dni;
+    @NotNull
+    private String email;
+    @NotNull
+    private String password;
+    @Enumerated(EnumType.STRING)
+    private Role role;
     private int age;
     private boolean hasSubjectDebts;
     private boolean hasEnrollmentDebt;
@@ -25,9 +40,13 @@ public class Student {
     @OneToMany(mappedBy = "student")
     List<CourseRegistration> registrations;
 
-    public Student(String name, String surname, int age, boolean hasSubjectDebts, boolean hasEnrollmentDebt, double entranceGrade) {
+    public Student(String name, String surname, int age, String dni, String email, String password, boolean hasSubjectDebts, boolean hasEnrollmentDebt, double entranceGrade) {
         this.name = name;
         this.surname = surname;
+        this.dni = dni;
+        this.email = email;
+        this.password = password;
+        this.role = Role.STUDENT;
         this.age = age;
         this.hasSubjectDebts = hasSubjectDebts;
         this.hasEnrollmentDebt = hasEnrollmentDebt;
@@ -40,31 +59,37 @@ public class Student {
         registrations.add(registration);
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority(role.name()));
     }
 
-    public void setSurname(String surname) {
-        this.surname = surname;
+    @Override
+    public String getUsername() {
+        return email;
     }
 
-    public void setAge(int age) {
-        this.age = age;
+    @Override
+    public String getPassword() {
+        return password;
     }
 
-    public void setHasSubjectDebts(boolean hasSubjectDebts) {
-        this.hasSubjectDebts = hasSubjectDebts;
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
     }
 
-    public void setHasEnrollmentDebt(boolean hasEnrollmentDebt) {
-        this.hasEnrollmentDebt = hasEnrollmentDebt;
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
     }
 
-    public void setEntranceGrade(double entranceGrade) {
-        this.entranceGrade = entranceGrade;
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
     }
 
-    public void setRegistrations(List<CourseRegistration> registrations) {
-        this.registrations = registrations;
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }
