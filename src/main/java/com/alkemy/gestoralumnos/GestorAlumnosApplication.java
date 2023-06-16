@@ -14,6 +14,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
 
@@ -26,6 +27,8 @@ public class GestorAlumnosApplication {
     CourseRegistrationRepository courseRegistrationRepository;
     @Autowired
     StudentRepository studentRepository;
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
     public static void main(String[] args) {
         SpringApplication.run(GestorAlumnosApplication.class, args);
@@ -35,16 +38,16 @@ public class GestorAlumnosApplication {
     public CommandLineRunner initData() {
         return (args) -> {
 
-            Student student1 = new Student("Juan", "Pérez", 20, "dni1", "email1@example.com", "password1", false, true, 8.5);
-            Student student2 = new Student("María", "Gómez", 22, "dni2", "email2@example.com", "password2", false, false, 7.8);
-            Student student3 = new Student("Pedro", "López", 19, "dni3", "email3@example.com", "password3", true, true, 6.2);
-            Student student4 = new Student("Laura", "Martínez", 21, "dni4", "email4@example.com", "password4", true, false, 9.0);
-            Student student5 = new Student("Carlos", "García", 18, "dni5", "email5@example.com", "password5", false, false, 7.2);
-            Student student6 = new Student("Ana", "Rodríguez", 20, "dni6", "email6@example.com", "password6", false, false, 8.8);
-            Student student7 = new Student("Diego", "Fernández", 23, "dni7", "email7@example.com", "password7", false, true, 6.5);
-            Student student8 = new Student("Sofía", "Hernández", 19, "dni8", "email8@example.com", "password8", true, true, 8.0);
-            Student student9 = new Student("Miguel", "Silva", 21, "dni9", "email9@example.com", "password9", false, true, 7.6);
-            Student student10 = new Student("Julia", "López", 22, "dni10", "email10@example.com", "password10", false, false, 9.2);
+            Student student1 = new Student("Juan", "Pérez", 20, "dni1", "email1@example.com", passwordEncoder.encode("password1"), false, true, 8.5);
+            Student student2 = new Student("María", "Gómez", 22, "dni2", "email2@example.com",passwordEncoder.encode("password2"), false, false, 7.8);
+            Student student3 = new Student("Pedro", "López", 19, "dni3", "email3@example.com",passwordEncoder.encode("password3"), true, true, 6.2);
+            Student student4 = new Student("Laura", "Martínez", 21, "dni4", "email4@example.com",passwordEncoder.encode("password4"), true, false, 9.0);
+            Student student5 = new Student("Carlos", "García", 18, "dni5", "email5@example.com", passwordEncoder.encode("password5"), false, false, 7.2);
+            Student student6 = new Student("Ana", "Rodríguez", 20, "dni6", "email6@example.com", passwordEncoder.encode("password6"), false, false, 8.8);
+            Student student7 = new Student("Diego", "Fernández", 23, "dni7", "email7@example.com", passwordEncoder.encode("password7"), false, true, 6.5);
+            Student student8 = new Student("Sofía", "Hernández", 19, "dni8", "email8@example.com", passwordEncoder.encode("password8"), true, true, 8.0);
+            Student student9 = new Student("Miguel", "Silva", 21, "dni9", "email9@example.com", passwordEncoder.encode("password9"), false, true, 7.6);
+            Student student10 = new Student("Julia", "López", 22, "dni10", "email10@example.com", passwordEncoder.encode("password10"), false, false, 9.2);
 
 
             Course course1 = new Course("React");
